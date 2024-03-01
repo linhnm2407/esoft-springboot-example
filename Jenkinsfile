@@ -26,8 +26,9 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonar-server') {
                         sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=three-tier-backend \
-                        -Dsonar.projectKey=three-tier-backend '''
+                                -Dsonar.projectKey=esoft-springboot-example \
+                                -Dsonar.projectName=esoft-springboot-example \
+                                 '''
                     }
             }
         }
