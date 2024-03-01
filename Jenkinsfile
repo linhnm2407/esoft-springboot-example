@@ -24,14 +24,8 @@ pipeline {
         }
         stage('Sonarqube Analysis') {
             steps {
-                dir("/") {
-                    withSonarQubeEnv('sonar-server') {
-                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                                -Dsonar.projectKey=esoft-springboot-example \
-                                -Dsonar.sources=. 
-                                 '''
-                    }
-                }
+                withSonarQubeEnv('sonar-server') {
+                sh 'mvn clean package sonar:sonar'
                 
             }
         }
