@@ -9,8 +9,7 @@ pipeline {
         AWS_ACCOUNT_ID = credentials('ACCOUNT_ID')
         AWS_ECR_REPO_NAME = credentials('ECR_REPO')
         AWS_DEFAULT_REGION = 'ap-southeast-2'
-        // REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
-        REPOSITORY_URI = "058264552037.dkr.ecr.ap-southeast-2.amazonaws.com/esoft-springboot"
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
     }
     stages {
         stage('Cleaning Workspace') {
@@ -70,9 +69,9 @@ pipeline {
         stage("ECR Image Pushing") {
             steps {
                 script {
-                        sh 'aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 058264552037.dkr.ecr.ap-southeast-2.amazonaws.com'
-                        sh 'docker tag esoft-springboot:latest 058264552037.dkr.ecr.ap-southeast-2.amazonaws.com/esoft-springboot:latest'
-                        sh 'docker push 058264552037.dkr.ecr.ap-southeast-2.amazonaws.com/esoft-springboot:latest'
+                        sh 'aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}'
+                        sh 'docker tag ${AWS_ECR_REPO_NAME} ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}'
+                        sh 'docker push ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}'
                 }
             }
         }
