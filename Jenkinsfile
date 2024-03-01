@@ -75,14 +75,14 @@ pipeline {
                 }
             }
         }
-        // stage("TRIVY Image Scan") {
-        //     steps {
-        //         sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt' 
-        //     }
-        // }
+        stage("TRIVY Image Scan") {
+            steps {
+                sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt' 
+            }
+        }
         stage('Checkout Code') {
             steps {
-                git credentialsId: 'GITHUB', url: 'https://github.com/linhnm2407/esoft-test-deploy.git'
+                git credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-test-deploy.git'
             }
         }
         stage('Update Deployment file') {
