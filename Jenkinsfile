@@ -31,9 +31,10 @@ pipeline {
             steps {
                 dir("/") {
                     withSonarQubeEnv('sonar-server') {
-                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                                -Dsonar.projectKey=esoft-springboot-example \
-                                -Dsonar.sources=. 
+                        sh ''' mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=esoft-springboot-example \
+  -Dsonar.host.url=http://3.25.235.13:9000 \
+  -Dsonar.login=squ_6265214b0fc7f8295507da79ff07f7ca4116e8b9
                                  '''
                     }
                 }
