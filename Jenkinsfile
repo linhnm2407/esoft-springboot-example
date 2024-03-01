@@ -9,7 +9,8 @@ pipeline {
         AWS_ACCOUNT_ID = credentials('ACCOUNT_ID')
         AWS_ECR_REPO_NAME = credentials('ECR_REPO')
         AWS_DEFAULT_REGION = 'ap-southeast-2'
-        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
+        // REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
+        REPOSITORY_URI = "058264552037.dkr.ecr.ap-southeast-2.amazonaws.com/esoft-springboot"
     }
     stages {
         stage('Cleaning Workspace') {
