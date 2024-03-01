@@ -22,10 +22,21 @@ pipeline {
                 git credentialsId: 'GITHUB', url: 'https://github.com/linhnm2407/esoft-springboot-example.git'
             }
         }
+        stage('Build') {
+            steps {
+                sh './mvnw clean install'
+            }
+        }
         stage('Sonarqube Analysis') {
             steps {
-                withSonarQubeEnv('sonar-server') {
-                sh 'mvn clean package sonar:sonar'
+                dir("/") {
+                    withSonarQubeEnv('sonar-server') {
+                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
+                                -Dsonar.projectKey=esoft-springboot-example \
+                                -Dsonar.sources=. 
+                                 '''
+                    }
+                }
                 
             }
         }
