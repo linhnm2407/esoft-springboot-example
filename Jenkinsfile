@@ -27,28 +27,25 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        // stage('Sonarqube Analysis') {
-        //     steps {
-        //         dir("/") {
-        //             withSonarQubeEnv('sonar-server') {
-        //                 sh ''' 
-        //                 mvn clean verify sonar:sonar \
-        //                 -Dsonar.projectKey=esoft-springboot-example \
-        //                 -Dsonar.host.url=http://3.25.235.13:9000 \
-        //                 -Dsonar.login=squ_6265214b0fc7f8295507da79ff07f7ca4116e8b9
-        //                 '''
-        //             }
-        //         }
-                
-        //     }
-        // }
-        // stage('Quality Check') {
-        //     steps {
-        //         script {
-        //             waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
-        //         }
-        //     }
-        // }
+        stage('Sonarqube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                        sh ''' 
+                        mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=esoft-springboot-example \
+  -Dsonar.host.url=http://3.25.126.235:9000 \
+  -Dsonar.login=squ_1b7a2eea963f3f1fad058789641258582d5ce600
+                        '''
+                    }                
+            }
+        }
+        stage('Quality Check') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+                }
+            }
+        }
         // stage('OWASP Dependency-Check Scan') {
         //     steps {
         //         dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
