@@ -91,7 +91,7 @@ pipeline {
                 GIT_USER_NAME = "linhnm2407"
             }
             steps {
-                withCredentials([string(credentialsId: 'GITHUB_ACCOUNT', variable: 'GITHUB_PAN')]) {
+                withCredentials([string(credentialsId: 'github', variable: 'GITHUB_PAN')]) {
                         sh '''
                             git config user.email "linhnm2407@gmail.com"
                             git config user.name "linhnm2407"
@@ -102,7 +102,7 @@ pipeline {
                             sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" values.yaml
                             git add values.yaml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
-                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
+                            git push https://${GITHUB_PAN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
                         '''
                     }
             }
