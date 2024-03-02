@@ -23,9 +23,19 @@ pipeline {
                 git credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-springboot-example.git'
             }
         }
-        stage('Build') {
-            steps {
-                sh 'mvn clean install'
+        // stage('Build') {
+        //     steps {
+        //         sh 'mvn clean install'
+        //     }
+        // }
+        stage('mvn compile'){
+            steps{
+                sh 'mvn clean compile'
+            }
+        }
+        stage('mvn test'){
+            steps{
+                sh 'mvn test'
             }
         }
         stage('Sonarqube Analysis') {
