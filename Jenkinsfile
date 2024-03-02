@@ -10,6 +10,7 @@ pipeline {
         AWS_ECR_REPO_NAME = credentials('ECR_REPO')
         AWS_DEFAULT_REGION = 'ap-southeast-2'
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
+        TOKEN = credentials('GITHUB_PAN')
     }
     stages {
         stage('Cleaning Workspace') {
@@ -89,7 +90,7 @@ pipeline {
                 GIT_USER_NAME = "linhnm2407"
             }
             steps {
-                withCredentials([string(credentialsId: 'GITHUB_PAN', variable: 'GITHUB_PAN')]) {
+                withCredentials([string(credentialsId: 'GITHUB_PAN', variable: 'TOKEN')]) {
                         sh '''
                             git config user.email "linhnm2407@gmail.com"
                             git config user.name "linhnm2407"
