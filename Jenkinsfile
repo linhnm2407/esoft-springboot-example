@@ -23,17 +23,12 @@ pipeline {
                 git credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-springboot-example.git'
             }
         }
-        // stage('Build') {
-        //     steps {
-        //         sh 'mvn clean install'
-        //     }
-        // }
-        stage('mvn compile'){
+        stage('mvn Compile'){
             steps{
                 sh 'mvn clean compile'
             }
         }
-        stage('mvn test'){
+        stage('mvn Test'){
             steps{
                 sh 'mvn test'
             }
@@ -53,6 +48,11 @@ pipeline {
                 script {
                     waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
                 }
+            }
+        }
+        stage('mvn Build') {
+            steps {
+                sh 'mvn clean install'
             }
         }
         stage('OWASP Dependency-Check Scan') {
