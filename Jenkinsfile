@@ -20,7 +20,7 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'staging' credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-springboot-example.git'
+                git branch: 'staging', credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-springboot-example.git'
             }
         }
         stage('mvn Compile'){
