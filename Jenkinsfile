@@ -115,10 +115,10 @@ pipeline {
                             git config user.name "linhnm2407"
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo $BUILD_NUMBER
-                            imageTag=$(grep -oP '(?<=esoft-springboot:)[^ ]+' values.yaml)
+                            imageTag=$(grep -oP '(?<=esoft-springboot:)[^ ]+' values-dev.yaml)
                             echo $imageTag
-                            sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" values.yaml
-                            git add values.yaml
+                            sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" values-dev.yaml
+                            git add values-dev.yaml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
                             git push https://${TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
                         '''
