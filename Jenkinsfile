@@ -100,7 +100,8 @@ pipeline {
                 GIT_USER_NAME = "linhnm2407"
             }
             steps {
-                withCredentials([string(credentialsId: 'GITHUB_PAN', variable: 'TOKEN')]) {
+                dir('chart') {
+                    withCredentials([string(credentialsId: 'GITHUB_PAN', variable: 'TOKEN')]) {
                         sh '''
                             git config user.email "linhnm2407@gmail.com"
                             git config user.name "linhnm2407"
@@ -114,6 +115,7 @@ pipeline {
                             git push https://${TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
                         '''
                     }
+                }                
             }
         }
     }
