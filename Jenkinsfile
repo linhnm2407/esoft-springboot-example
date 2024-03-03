@@ -55,17 +55,23 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        // stage('OWASP Dependency-Check Scan') {
-        //     steps {
-        //         dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-        //         dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-        //     }
-        // }
-        // stage('Trivy File Scan') {
-        //     steps {
-        //         sh 'trivy fs . > trivyfs.txt'
-        //     }
-        // }
+        stage('OWASP Dependency-Check Scan') {
+            when {
+                branch 'staging | master'
+            }
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('Trivy File Scan') {
+            when {
+                branch 'staging | master'
+            }
+            steps {
+                sh 'trivy fs . > trivyfs.txt'
+            }
+        }
         stage("Docker Image Build") {
             steps {
                 script {
@@ -84,11 +90,14 @@ pipeline {
                 }
             }
         }
-        // stage("TRIVY Image Scan") {
-        //     steps {
-        //         sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt' 
-        //     }
-        // }
+        stage("TRIVY Image Scan") {
+            when {
+                branch 'staging | master'
+            }
+            steps {
+                sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt' 
+            }
+        }
         stage('Checkout Code') {
             steps {
                 git credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-test-deploy.git'
@@ -98,6 +107,9 @@ pipeline {
             environment {
                 GIT_REPO_NAME = "esoft-test-deploy"
                 GIT_USER_NAME = "linhnm2407"
+            }
+            when {
+                branch 'dev'
             }
             steps {
                 dir('chart') {
@@ -111,6 +123,48 @@ pipeline {
                             echo $imageTag
                             sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" values-dev.yaml
                             git add values-dev.yaml
+                            git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
+                            git push https://${TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
+                        '''
+                    }
+                }                
+            }
+            when {
+                branch 'staging'
+            }
+            steps {
+                dir('chart') {
+                    withCredentials([string(credentialsId: 'GITHUB_PAN', variable: 'TOKEN')]) {
+                        sh '''
+                            git config user.email "linhnm2407@gmail.com"
+                            git config user.name "linhnm2407"
+                            BUILD_NUMBER=${BUILD_NUMBER}
+                            echo $BUILD_NUMBER
+                            imageTag=$(grep -oP '(?<=esoft-springboot:)[^ ]+' values-stag.yaml)
+                            echo $imageTag
+                            sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" values-stag.yaml
+                            git add values-stag.yaml
+                            git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
+                            git push https://${TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
+                        '''
+                    }
+                }                
+            }
+            when {
+                branch 'master'
+            }
+            steps {
+                dir('chart') {
+                    withCredentials([string(credentialsId: 'GITHUB_PAN', variable: 'TOKEN')]) {
+                        sh '''
+                            git config user.email "linhnm2407@gmail.com"
+                            git config user.name "linhnm2407"
+                            BUILD_NUMBER=${BUILD_NUMBER}
+                            echo $BUILD_NUMBER
+                            imageTag=$(grep -oP '(?<=esoft-springboot:)[^ ]+' values.yaml)
+                            echo $imageTag
+                            sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" values.yaml
+                            git add values.yaml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
                             git push https://${TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
                         '''
