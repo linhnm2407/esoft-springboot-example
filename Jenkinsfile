@@ -18,9 +18,18 @@ pipeline {
                 cleanWs()
             }
         }
-        stage('Checkout from Git') {
+        // stage('Checkout from Git') {
+        //     steps {
+        //         git credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-springboot-example.git'
+        //     }
+        // }
+         stage('Code Checkout') {
             steps {
-                git credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-springboot-example.git'
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: 'dev']], 
+                    userRemoteConfigs: [[url: 'https://github.com/linhnm2407/esoft-springboot-example.git']]
+                ])
             }
         }
         stage('mvn Compile'){
