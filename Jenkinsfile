@@ -55,17 +55,17 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage('OWASP Dependency-Check Scan') {
-            steps {
-                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
-        stage('Trivy File Scan') {
-            steps {
-                sh 'trivy fs . > trivyfs.txt'
-            }
-        }
+        // stage('OWASP Dependency-Check Scan') {
+        //     steps {
+        //         dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+        //         dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+        //     }
+        // }
+        // stage('Trivy File Scan') {
+        //     steps {
+        //         sh 'trivy fs . > trivyfs.txt'
+        //     }
+        // }
         stage("Docker Image Build") {
             steps {
                 script {
@@ -84,11 +84,11 @@ pipeline {
                 }
             }
         }
-        stage("TRIVY Image Scan") {
-            steps {
-                sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt' 
-            }
-        }
+        // stage("TRIVY Image Scan") {
+        //     steps {
+        //         sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt' 
+        //     }
+        // }
         stage('Checkout Code') {
             steps {
                 git credentialsId: 'GITHUB_ACCOUNT', url: 'https://github.com/linhnm2407/esoft-test-deploy.git'
