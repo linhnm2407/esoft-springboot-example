@@ -9,6 +9,6 @@ public class RestController {
 
     @GetMapping("/hello")
     public String ping() {
-        return "Hello World - Staging Environment";
+        return "Hello World";
     }
 }
